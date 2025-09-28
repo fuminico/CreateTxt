@@ -40,7 +40,7 @@ export default function HistoryPage() {
   }, []);
 
   // inputDataを読みやすい形式に変換するヘルパー関数
-  const formatInputData = (data: any) => {
+  const formatInputData = (data: Record<string, string>) => {
     return Object.entries(data)
       .map(([key, value]) => `${key}: ${value}`)
       .join(', ');

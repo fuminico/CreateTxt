@@ -2,14 +2,8 @@ import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { ToolForm } from './components/ToolForm';
 
-interface ToolPageProps {
-  params: {
-    toolId: string;
-  };
-}
-
 // サーバーコンポーネントとして非同期にデータを取得
-export default async function ToolPage({ params }: ToolPageProps) {
+export default async function ToolPage({ params }: { params: { toolId: string } }) {
   const toolId = parseInt(params.toolId, 10);
 
   if (isNaN(toolId)) {

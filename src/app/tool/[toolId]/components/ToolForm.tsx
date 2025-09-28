@@ -41,7 +41,7 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
       if (typeof tool.inputSchema === 'string') {
         return JSON.parse(tool.inputSchema);
       }
-      return tool.inputSchema as InputSchema;
+      return tool.inputSchema as unknown as InputSchema;
     } catch {
       return null;
     }

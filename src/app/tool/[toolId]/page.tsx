@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { ToolForm } from './components/ToolForm';
-import type { PageProps } from 'next';
+import type PageProps from 'next';
 
 // サーバーコンポーネントとして非同期にデータを取得
 export default async function ToolPage({ params }: PageProps<{ toolId: string }>) {

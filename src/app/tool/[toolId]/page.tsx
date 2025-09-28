@@ -1,10 +1,13 @@
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { ToolForm } from './components/ToolForm';
+import type { PageProps } from 'next';
 
 // サーバーコンポーネントとして非同期にデータを取得
-export default async function ToolPage({ params }: { params: { toolId: string } }) {
-  const toolId = parseInt(params.toolId, 10);
+export default async function ToolPage({ params }: PageProps<{ toolId: string }>) {
+  // Next.js 15ではparamsがPromiseライクなオブジェクトになるため、awaitで解決します
+  const resolvedParams = await params;
+  const toolId = parseInt(resolvedParams.toolId, 10);
 
   if (isNaN(toolId)) {
     notFound();

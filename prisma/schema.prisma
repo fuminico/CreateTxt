@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Tool {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  inputSchema Json     @map("input_schema")
+  basePrompt  String   @map("base_prompt")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  histories   History[]
+}
+
+model History {
+  id         Int      @id @default(autoincrement())
+  toolId     Int      @map("tool_id")
+  inputData  Json     @map("input_data")
+  outputText String   @map("output_text")
+  modelUsed  String   @map("model_used")
+  createdAt  DateTime @default(now()) @map("created_at")
+  tool       Tool     @relation(fields: [toolId], references: [id])
+}

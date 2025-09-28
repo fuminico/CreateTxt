@@ -4,13 +4,12 @@ import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { motion } from 'framer-motion';
 import { Loader2, MessageSquare, Clock } from 'lucide-react';
-import { Tool } from '@prisma/client';
 
 // 履歴データの型定義 (Toolの情報を含む)
 interface HistoryEntry {
   id: number;
   toolId: number;
-  inputData: any;
+  inputData: Record<string, string>;
   outputText: string;
   modelUsed: string;
   createdAt: string;

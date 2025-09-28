@@ -48,8 +48,7 @@
 body {
   /* 背景をほんのりクリーム色に */
   @apply bg-rose-50/50 text-foreground;
-  font-family: 'M PLUS Rounded 1c', sans-serif; /* 丸ゴシックで可愛らしい印象に */
+  font-family: var(--font-custom), sans-serif; /* 変数でフォントを指定 */
 }
 
-/* Google Fontsの読み込み */
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap');
+/* Google Fontsの読み込みはlayout.tsxに移動したため削除 */

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -11,6 +11,19 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tool } from '@prisma/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Sparkles } from 'lucide-react';
+
+// --- 型定義の強化 ---
+interface InputSchemaProperty {
+  type: 'string' | 'select' | 'textarea';
+  description: string;
+  enum?: string[];
+}
+
+interface InputSchema {
+  type: 'object';
+  properties: Record<string, InputSchemaProperty>;
+  required?: string[];
+}
 
 interface ToolFormProps {
   tool: Tool;
@@ -23,11 +36,22 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const getInputSchema = useCallback((): InputSchema | null => {
+    try {
+      if (typeof tool.inputSchema === 'string') {
+        return JSON.parse(tool.inputSchema);
+      }
+      return tool.inputSchema as InputSchema;
+    } catch {
+      return null;
+    }
+  }, [tool.inputSchema]);
+
   useEffect(() => {
     const schema = getInputSchema();
     const defaultFormData: Record<string, string> = {};
     if (schema && schema.properties) {
-      for (const [key, value] of Object.entries(schema.properties) as [string, any][]) {
+      for (const [key, value] of Object.entries(schema.properties)) {
         if (value.type === 'select' && value.enum && value.enum.length > 0) {
           defaultFormData[key] = value.enum[0];
         } else {
@@ -36,7 +60,7 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
       }
     }
     setFormData(defaultFormData);
-  }, [tool.id]);
+  }, [tool.id, getInputSchema]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -72,13 +96,6 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
     }
   };
 
-  const getInputSchema = () => {
-    try {
-      if (typeof tool.inputSchema === 'string') return JSON.parse(tool.inputSchema);
-      return tool.inputSchema as any;
-    } catch { return null; }
-  };
-
   const schema = getInputSchema();
   if (!schema || !schema.properties) {
     return <p className="text-destructive">フォームの定義(inputSchema)が不正です。</p>;
@@ -86,7 +103,7 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
 
   const cardBaseClass = "bg-white/70 backdrop-blur-lg shadow-lg rounded-2xl border";
 
-  const renderFormField = (key: string, value: any) => {
+  const renderFormField = (key: string, value: InputSchemaProperty) => {
     if (value.type === 'select' && Array.isArray(value.enum)) {
       return (
         <ToggleGroup type="single" value={formData[key]} onValueChange={(val) => handleToggleChange(key, val)} className="flex-wrap justify-start gap-2">
@@ -114,7 +131,6 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
       );
     }
 
-    // Default to Input
     return (
       <Input
         id={key}
@@ -147,7 +163,7 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
               </RadioGroup>
             </div>
 
-            {Object.entries(schema.properties).map(([key, value]: [string, any]) => (
+            {Object.entries(schema.properties).map(([key, value]) => (
               <div key={key} className="space-y-3">
                 <Label htmlFor={key} className="font-bold text-slate-600">{value.description || key}</Label>
                 {renderFormField(key, value)}

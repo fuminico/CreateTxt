@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import OpenAI from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     // --- 4. modelProviderに応じてAIにリクエスト ---
     if (modelProvider === 'gemini') {
       // Geminiの場合
-      modelUsed = 'gemini-1.5-flash';
+      modelUsed = 'gemini-2.5-flash';
       const model = genAI.getGenerativeModel({ model: modelUsed });
       const result = await model.generateContent(finalPrompt);
       const response = result.response;
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
     } else {
       // OpenAI (デフォルト) の場合
-      modelUsed = 'gpt-3.5-turbo';
+      modelUsed = 'gpt-4o';
       const completion = await openai.chat.completions.create({
         model: modelUsed,
         messages: [{ role: 'user', content: finalPrompt }],

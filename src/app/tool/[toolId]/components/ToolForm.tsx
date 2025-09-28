@@ -142,8 +142,8 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
             <div className="space-y-3">
               <Label className="font-bold text-slate-600">AIモデル</Label>
               <RadioGroup value={modelProvider} onValueChange={setModelProvider} className="flex space-x-4">
-                <div className="flex items-center space-x-2"><RadioGroupItem value="openai" id="openai" /><Label htmlFor="openai">OpenAI</Label></div>
-                <div className="flex items-center space-x-2"><RadioGroupItem value="gemini" id="gemini" /><Label htmlFor="gemini">Gemini</Label></div>
+                <div className="flex items-center space-x-2"><RadioGroupItem value="openai" id="openai" /><Label htmlFor="openai">OpenAI (GPT-4o)</Label></div>
+                <div className="flex items-center space-x-2"><RadioGroupItem value="gemini" id="gemini" /><Label htmlFor="gemini">Google (Gemini 2.5 Flash)</Label></div>
               </RadioGroup>
             </div>
 

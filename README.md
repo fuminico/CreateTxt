@@ -34,7 +34,7 @@ AI（OpenAI/Gemini）を活用して、様々な用途に合わせたテキス�
 1.  **リポジトリをクローンし、ディレクトリを移動します。**
     ```bash
     git clone https://github.com/fuminico/CreateTxt.git
-    cd CreateTxt/app
+    cd CreateTxt # appディレクトリではなく、ルートに移動
     ```
 
 2.  **依存パッケージをインストールします。**
@@ -47,7 +47,7 @@ AI（OpenAI/Gemini）を活用して、様々な用途に合わせたテキス�
     -   プロジェクトの `Settings` > `Database` に移動し、**Connection Pooling**用の接続文字列（URI）をコピーします。
 
 4.  **環境変数の設定**
-    -   `.env.example` をコピーして `.env` ファイルを作成します。
+    -   `app`ディレクトリ内にある `.env.example` をコピーして `.env` ファイルを作成します。
     -   `.env` ファイルを開き、取得した情報を設定します。
       ```.env
       # Supabaseの接続URL（Connection Pooler）の末尾に `?pgbouncer=true` を追加してください
@@ -60,8 +60,8 @@ AI（OpenAI/Gemini）を活用して、様々な用途に合わせたテキス�
 
 5.  **データベースのテーブル作成とデータ投入**
     -   Supabaseプロジェクトの **SQL Editor** を開きます。
-    -   `prisma/migrations` 内にある `migration.sql` ファイルの内容をコピー＆ペーストして実行し、テーブルを作成します。
-    -   `prisma/seed.sql` (手動で作成) の内容を実行し、初期データを投入します。（`prisma db seed`は現在Supabaseのコネクションプーラーと互換性の問題があるため、手動での投入を推奨します）
+    -   `app/prisma/migrations` 内にある `migration.sql` ファイルの内容をコピー＆ペーストして実行し、テーブルを作成します。
+    -   `app/prisma/seed.sql` の内容を実行し、初期データを投入します。
 
 6.  **開発サーバーの起動**
     ```bash
@@ -75,10 +75,11 @@ AI（OpenAI/Gemini）を活用して、様々な用途に合わせたテキス�
 
 2.  **Vercelでプロジェクトをインポートします。**
     -   Vercelにログインし、「Add New...」>「Project」から、このGitHubリポジトリを選択します。
+    -   **Root Directory** が `app` に設定されていることを確認します。
 
 3.  **環境変数を設定します。**
     -   Vercelのプロジェクト設定画面で、`.env`ファイルと同じ内容の環境変数をすべて設定します。
-    -   **重要**: `DATABASE_URL`は、接続文字列の末尾に `?sslmode=require` を追加することをVercelは推奨しています。
+    -   **重要**: `DATABASE_URL`は、接続文字列の末尾に `&sslmode=require` を追加することをVercelは推奨しています。
       ```
       postgresql://postgres.[REF]:[PASS]@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require
       ```

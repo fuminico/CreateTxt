@@ -2,15 +2,11 @@ import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { ToolForm } from './components/ToolForm';
 
-// Next.js App Routerで推奨されるページのPropsの型定義
-interface ToolPageProps {
-  params: { toolId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
 // サーバーコンポーネントとして非同期にデータを取得
-export default async function ToolPage({ params }: ToolPageProps) {
-  const toolId = parseInt(params.toolId, 10);
+export default async function ToolPage({ params }: { params: Promise<{ toolId: string }> }) {
+  // params自体がPromiseなので、awaitで解決してからプロパティにアクセスする
+  const { toolId: toolIdString } = await params;
+  const toolId = parseInt(toolIdString, 10);
 
   if (isNaN(toolId)) {
     notFound();

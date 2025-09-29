@@ -16,8 +16,10 @@ model Tool {
   description String
   category    String
   inputSchema Json     @map("input_schema")
-  basePrompt  String   @map("base_prompt")
-  createdAt   DateTime @default(now()) @map("created_at")
+  basePrompt         String   @map("base_prompt")
+  outputCountEnabled Boolean  @default(false) @map("output_count_enabled")
+  outputCountDefault Int      @default(1) @map("output_count_default")
+  createdAt          DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   histories   History[]
 }

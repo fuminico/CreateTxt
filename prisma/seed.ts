@@ -13,6 +13,7 @@ async function main() {
     {
       title: 'ブログ記事生成ツール',
       description: 'キーワードを入れるだけでブログ記事のドラフトを生成します。',
+      category: 'ブログ',
       inputSchema: {
         type: 'object',
         properties: {
@@ -30,6 +31,7 @@ async function main() {
     {
       title: 'SNS投稿文生成ツール',
       description: '商品の特徴から魅力的なSNS投稿文を複数パターン生成します。',
+      category: 'SNS',
       inputSchema: {
         type: 'object',
         properties: {
@@ -43,6 +45,7 @@ async function main() {
     {
         title: 'キャッチコピー生成ツール',
         description: 'サービス名や特徴からキャッチコピーを複数案生成します。',
+        category: 'マーケティング',
         inputSchema: {
           type: 'object',
           properties: {

@@ -7,6 +7,7 @@ AI（OpenAI/Gemini）を活用して、様々な用途に合わせたテキス�
 ## ✨ 主な機能
 
 - **最新AIモデル対応**: OpenAI (`gpt-4o`) と Google (`gemini-2.5-flash`) の最新モデルを切り替えてテキストを生成できます。
+- **カテゴリ分類**: ツールが「ブログ」「SNS」などのカテゴリに分類され、見つけやすくなっています。
 - **動的フォーム生成**: データベースに定義されたスキーマに基づき、ツールごとに最適な入力フォーム（一行入力, 複数行入力, 選択ボタン）を自動で構築します。
 - **生成履歴**: 生成されたテキストはすべてSupabaseのデータベースに記録され、後から一覧で確認できます。
 - **ポップなUIデザイン**: パステルカラーを基調とした、親しみやすく可愛らしいデザインをFramer Motionのアニメーションと共に実現しています。
@@ -34,7 +35,7 @@ AI（OpenAI/Gemini）を活用して、様々な用途に合わせたテキス�
 1.  **リポジトリをクローンし、ディレクトリを移動します。**
     ```bash
     git clone https://github.com/fuminico/CreateTxt.git
-    cd CreateTxt # appディレクトリではなく、ルートに移動
+    cd CreateTxt/app
     ```
 
 2.  **依存パッケージをインストールします。**
@@ -47,7 +48,7 @@ AI（OpenAI/Gemini）を活用して、様々な用途に合わせたテキス�
     -   プロジェクトの `Settings` > `Database` に移動し、**Connection Pooling**用の接続文字列（URI）をコピーします。
 
 4.  **環境変数の設定**
-    -   `app`ディレクトリ内にある `.env.example` をコピーして `.env` ファイルを作成します。
+    -   `.env.example` をコピーして `.env` ファイルを作成します。
     -   `.env` ファイルを開き、取得した情報を設定します。
       ```.env
       # Supabaseの接続URL（Connection Pooler）の末尾に `?pgbouncer=true` を追加してください
@@ -60,8 +61,8 @@ AI（OpenAI/Gemini）を活用して、様々な用途に合わせたテキス�
 
 5.  **データベースのテーブル作成とデータ投入**
     -   Supabaseプロジェクトの **SQL Editor** を開きます。
-    -   `app/prisma/migrations` 内にある `migration.sql` ファイルの内容をコピー＆ペーストして実行し、テーブルを作成します。
-    -   `app/prisma/seed.sql` の内容を実行し、初期データを投入します。
+    -   `prisma/migrations` 内にある `migration.sql` ファイルの内容をコピー＆ペーストして実行し、テーブルを作成します。
+    -   `prisma/seed.sql` の内容をコピー＆ペーストして実行し、初期データを投入します。
 
 6.  **開発サーバーの起動**
     ```bash

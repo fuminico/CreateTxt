@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tool } from '@prisma/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Check } from 'lucide-react'; // Copy, Checkアイコンをインポート
 
 // --- 型定義の強化 ---
 interface InputSchemaProperty {
@@ -35,6 +35,7 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
   const [generatedText, setGeneratedText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false); // コピー状態のstate
 
   const getInputSchema = useCallback((): InputSchema | null => {
     try {
@@ -71,6 +72,14 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
     if (value) setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
+  const handleCopyToClipboard = () => {
+    if (generatedText) {
+      navigator.clipboard.writeText(generatedText);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000); // 2秒後に元に戻す
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -104,6 +113,7 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
   const cardBaseClass = "bg-white/70 backdrop-blur-lg shadow-lg rounded-2xl border";
 
   const renderFormField = (key: string, value: InputSchemaProperty) => {
+    // ... (renderFormFieldの実装は変更なし)
     if (value.type === 'select' && Array.isArray(value.enum)) {
       return (
         <ToggleGroup type="single" value={formData[key]} onValueChange={(val) => handleToggleChange(key, val)} className="flex-wrap justify-start gap-2">
@@ -115,32 +125,13 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
         </ToggleGroup>
       );
     }
-
     if (value.type === 'textarea') {
       return (
-        <Textarea
-          id={key}
-          name={key}
-          value={formData[key] || ''}
-          onChange={handleInputChange}
-          required={schema.required?.includes(key)}
-          placeholder={`${value.description}を詳しく入力...`}
-          className="bg-white/50"
-          rows={5}
-        />
+        <Textarea id={key} name={key} value={formData[key] || ''} onChange={handleInputChange} required={schema.required?.includes(key)} placeholder={`${value.description}を詳しく入力...`} className="bg-white/50" rows={5} />
       );
     }
-
     return (
-      <Input
-        id={key}
-        name={key}
-        value={formData[key] || ''}
-        onChange={handleInputChange}
-        required={schema.required?.includes(key)}
-        placeholder={`${value.description}を入力...`}
-        className="bg-white/50"
-      />
+      <Input id={key} name={key} value={formData[key] || ''} onChange={handleInputChange} required={schema.required?.includes(key)} placeholder={`${value.description}を入力...`} className="bg-white/50" />
     );
   };
 
@@ -179,7 +170,24 @@ export const ToolForm = ({ tool }: ToolFormProps) => {
       </Card>
 
       <Card className={cardBaseClass}>
-        <CardHeader><CardTitle className="text-slate-700">生成結果</CardTitle></CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-slate-700">生成結果</CardTitle>
+          {generatedText && (
+            <Button variant="ghost" size="icon" onClick={handleCopyToClipboard} className="text-slate-500 hover:text-pink-500">
+              <AnimatePresence mode="wait" initial={false}>
+                {isCopied ? (
+                  <motion.div key="check" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }}>
+                    <Check className="size-5 text-pink-500" />
+                  </motion.div>
+                ) : (
+                  <motion.div key="copy" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }}>
+                    <Copy className="size-5" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Button>
+          )}
+        </CardHeader>
         <CardContent className="min-h-[300px] flex items-center justify-center">
           <AnimatePresence mode="wait">
             {isLoading && <motion.div key="loader" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><Loader2 className="size-10 animate-spin text-pink-400" /></motion.div>}

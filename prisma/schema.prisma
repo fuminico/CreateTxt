@@ -14,6 +14,7 @@ model Tool {
   id          Int      @id @default(autoincrement())
   title       String
   description String
+  category    String
   inputSchema Json     @map("input_schema")
   basePrompt  String   @map("base_prompt")
   createdAt   DateTime @default(now()) @map("created_at")
